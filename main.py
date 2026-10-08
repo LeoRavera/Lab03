@@ -13,6 +13,7 @@ def menu():
     return input("Scegli un'opzione >> ")
 
 def main():
+    lastId = 11
     deposito = DepositoStrumenti("Deposito Strumenti Civico", "Alessandro Visconti")
 
     while True:
@@ -21,6 +22,8 @@ def main():
         if scelta == "1":
             nuovo_responsabile = input("Inserisci il nuovo responsabile: ")
             # TODO: Aggiorna responsabile nel sistema
+            deposito.responsabile = nuovo_responsabile
+            print(f"respondabile: {deposito.responsabile}")
 
         elif scelta == "2":
             while True:
@@ -40,8 +43,9 @@ def main():
             except ValueError:
                 print("Errore: inserire valori numerici validi per anno e valore.")
                 continue
-            strumento = deposito.aggiungi_strumento(tipo, marca, anno_acquisto, valore)
+            strumento = deposito.aggiungi_strumento(f"S{str(lastId)}", tipo, marca, anno_acquisto, valore)
             print(f"Strumento aggiunto: {strumento}")
+            lastId += 1
 
         elif scelta == "4":
             strumenti_ordinati = deposito.strumenti_ordinati_per_marca()
@@ -54,15 +58,18 @@ def main():
             data = datetime.now().date()
             try:
                 prestito = deposito.nuovo_prestito(data, id_strumento, cognome_allievo)
-                print(f"Prestito andato a buon fine: {prestito}")
+                print(prestito)
             except Exception as e:
                 print(e)
 
+
         elif scelta == "6":
-            id_prestito = input("ID prestito da terminare: ")
+            # Ho usato il codice di strumento come codice univoco del prestito dato che è gia univoco
+            # e lo strumento puo essere preso in prestito solo uno studente alla volta
+            id_prestito = input("ID strumento del prestito da terminare: ")
             try:
-                deposito.termina_prestito(id_prestito)
-                print(f"Prestito {id_prestito} terminato con successo.")
+                restituito = deposito.termina_prestito(id_prestito)
+                print(restituito)
             except Exception as e:
                 print(e)
 
